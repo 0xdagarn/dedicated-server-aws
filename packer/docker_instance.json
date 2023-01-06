@@ -1,51 +1,54 @@
 {
-    "builders" : [
+  "builders": [
+    {
+      "type": "amazon-ebs",
+      "region": "ap-northeast-2",
+      "instance_type": "t2.small",
+      "source_ami": "ami-0f0f102062ea025b2",
+      "ssh_username": "ec2-user",
+      "ami_name": "ue5-dedicated-server-host-{{ timestamp }}",
+      "access_key": "{{user `aws_access_key`}}",
+      "secret_key": "{{user `aws_secret_key`}}",
+      "launch_block_device_mappings": [
         {
-            "type" : "amazon-ebs",
-            "region": "us-east-1",
-            "instance_type": "t2.small",
-            "source_ami": "ami-0fc61db8544a617ed",
-            "ssh_username": "ec2-user",
-            "ami_name": "ue4-server-host-{{ timestamp }}",
-            "access_key": "{{user `aws_access_key`}}",
-            "secret_key": "{{user `aws_secret_key`}}",
-            "launch_block_device_mappings": [{
-                "device_name": "/dev/xvda",
-                "volume_size": 15,
-                "delete_on_termination": true
-            }]
+          "device_name": "/dev/xvda",
+          "volume_size": 15,
+          "delete_on_termination": true
         }
-    ],
-    "provisioners": [
-        {
-            "type": "shell",
-            "inline": [
-                "sudo yum update -y",
-                "sudo amazon-linux-extras install docker",
-                "sudo service docker start",
-                "sudo systemctl enable docker",
-                "sudo usermod -a -G docker ec2-user",
-                "mkdir -p /home/ec2-user/docker/"
-            ]
-        },
-        {
-            "type": "file",
-            "source": "server/unreal-dedicated.tar.gz",
-            "destination": "/tmp/unreal-dedicated.tar.gz"
-        },
-        {
-            "type": "file",
-            "source": "docker/Dockerfile",
-            "destination": "/tmp/Dockerfile"
-        },
-        {
-            "type": "shell",
-            "inline": [
-                "mv /tmp/unreal-dedicated.tar.gz /home/ec2-user/docker/unreal-dedicated.tar.gz",
-                "mv /tmp/Dockerfile /home/ec2-user/docker/Dockerfile",
-                "cd /home/ec2-user/docker && sudo docker build -t ue4-dedicated-server .",
-                "rm -rf /home/ec2-user/docker"
-            ]
-        }
-    ]
+      ]
+    }
+  ],
+  "provisioners": [
+    {
+      "type": "shell",
+      "inline": [
+        "sudo yum update -y",
+        "sudo yum install -y amazon-linux-extras",
+        "sudo amazon-linux-extras install docker",
+        "sudo service docker start",
+        "sudo systemctl enable docker",
+        "sudo usermod -a -G docker ec2-user",
+        "mkdir -p /home/ec2-user/docker/"
+      ]
+    },
+    {
+      "type": "file",
+      "source": "server/unreal-dedicated.tar.gz",
+      "destination": "/tmp/unreal-dedicated.tar.gz"
+    },
+    {
+      "type": "file",
+      "source": "docker/Dockerfile",
+      "destination": "/tmp/Dockerfile"
+    },
+    {
+      "type": "shell",
+      "inline": [
+        "mv /tmp/unreal-dedicated.tar.gz /home/ec2-user/docker/unreal-dedicated.tar.gz",
+        "mv /tmp/Dockerfile /home/ec2-user/docker/Dockerfile",
+        "cd /home/ec2-user/docker && sudo docker build -t ue5-dedicated-server .",
+        "rm -rf /home/ec2-user/docker"
+      ]
+    }
+  ]
 }

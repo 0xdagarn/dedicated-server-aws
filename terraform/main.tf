@@ -22,14 +22,14 @@ resource "aws_security_group" "udp_7777" {
   }
 }
 
-resource "aws_instance" "ue4_dedicated" {
+resource "aws_instance" "ue5_dedicated" {
     instance_type = "t2.small"
-    ami = data.aws_ami.ue4_dedicated_ami.id
+    ami = data.aws_ami.dedicated-server-aws.id
     vpc_security_group_ids = [
         aws_security_group.udp_7777.id
     ]
     tags = {
-        Name = "ue4-dedicated-server"
+        Name = "ue5-dedicated-server"
     }
     user_data = file("scripts/userdata.sh")
 }

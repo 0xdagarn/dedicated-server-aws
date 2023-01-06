@@ -6,11 +6,11 @@ RUN apt-get update \
 COPY unreal-dedicated.tar.gz .
 RUN tar -xzf ./unreal-dedicated.tar.gz
 
-# Add a new ue4 user. The dedicated server cannot be run as root.
-RUN useradd ue4 \
-    && chown ue4:ue4 -R ./Linux
+# Add a new ue5 user. The dedicated server cannot be run as root.
+RUN useradd ue5 \
+    && chown ue5:ue5 -R ./LinuxServer
 
-USER ue4
+USER ue5
 EXPOSE 7777/udp
 
-ENTRYPOINT [ "./Linux/LinuxServer/SheepsGateGameServer.sh" ]
+ENTRYPOINT [ "./LinuxServer/DedicatedServerTestServer.sh" ]
