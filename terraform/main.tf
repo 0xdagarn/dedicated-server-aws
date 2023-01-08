@@ -10,6 +10,14 @@ resource "aws_security_group" "udp_7777" {
     cidr_blocks = var.ip_whitelist
   }
 
+  ingress {
+    description = "Allow inbound SSH traffic"
+    from_port   = 22
+    to_port     = 22
+    protocol    = "tcp"
+    cidr_blocks = var.ip_whitelist
+  }
+
   egress {
     from_port   = 0
     to_port     = 0
