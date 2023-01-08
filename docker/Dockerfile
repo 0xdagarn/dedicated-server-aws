@@ -8,7 +8,8 @@ RUN tar -xzf ./unreal-dedicated.tar.gz
 
 # Add a new ue5 user. The dedicated server cannot be run as root.
 RUN useradd ue5 \
-    && chown ue5:ue5 -R ./LinuxServer
+    && chown ue5:ue5 -R ./LinuxServer \
+    && chmod +x ./LinuxServer/DedicatedServerTestServer.sh
 
 USER ue5
 EXPOSE 7777/udp
